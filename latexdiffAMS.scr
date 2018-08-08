@@ -1,0 +1,34 @@
+#!/bin/bash
+# Script for applying latexdiff to AMS latex journal articles.
+#
+# usage: latexdiffAMS old.tex new.tex out.pdf
+#
+# This script streamlines the process of creating a marked-up .pdf of
+# the changes between an old (e.g. a previous submission) and a new
+# (e.g. after revisions have been completed) AMS journal .tex
+# file. Its main task is to automate the creation of a separate marked
+# up abstract (normal latexdiff will not mark-up the abstract because
+# it is in a environment).
+#
+# dependencies; pdflatex, bibtex, latexdiff, pdftk
+
+# raw latexdiff to create main file:
+latexdiff $1 $2 > diff.tex
+
+# Create diff pdf:
+pdflatex diff.tex
+bibtex diff.tex
+pdflatex diff.tex
+pdflatex diff.tex
+
+# Extract old abstract and put in file:
+
+# Extract new abstract and put in file:
+
+# latexdiff abstract files:
+
+# put abstract_diff.pdf in diff.pdf:
+
+# copy to out.pdf:
+
+
