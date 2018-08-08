@@ -12,14 +12,22 @@
 #
 # dependencies; pdflatex, bibtex, latexdiff, pdftk
 
+# Make a temporary directory:
+WORKDIR=`mktemp -d -p ./`
+
 # raw latexdiff to create main file:
-latexdiff $1 $2 > diff.tex
+echo "latexdiff $1 $2 > $WORKDIR/diff.tex"
+latexdiff $1 $2 > $WORKDIR/diff.tex
 
 # Create diff pdf:
-pdflatex diff.tex
-bibtex diff.tex
-pdflatex diff.tex
-pdflatex diff.tex
+echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
+pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
+echo "bibtex $WORKDIR/diff"
+bibtex $WORKDIR/diff
+echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
+pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
+echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
+pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
 
 # Extract old abstract and put in file:
 
@@ -30,5 +38,8 @@ pdflatex diff.tex
 # put abstract_diff.pdf in diff.pdf:
 
 # copy to out.pdf:
+cp $WORKDIR/diff.pdf $3
 
+# rm workdir:
+rm -r $WORKDIR
 

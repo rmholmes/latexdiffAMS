@@ -1,0 +1,149 @@
+%% Version 4.3.2, 25 August 2014
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Template.tex --  LaTeX-based template for submissions to the 
+% American Meteorological Society
+%
+% Template developed by Amy Hendrickson, 2013, TeXnology Inc., 
+% amyh@texnology.com, http://www.texnology.com
+% following earlier work by Brian Papa, American Meteorological Society
+%
+% Email questions to latex@ametsoc.org.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% PREAMBLE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%% Start with one of the following:
+% DOUBLE-SPACED VERSION FOR SUBMISSION TO THE AMS
+\documentclass{ametsoc}
+
+% TWO-COLUMN JOURNAL PAGE LAYOUT---FOR AUTHOR USE ONLY
+% \documentclass[twocol]{ametsoc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% To be entered only if twocol option is used
+
+\journal{jpo}
+
+%  Please choose a journal abbreviation to use above from the following list:
+% 
+%   jamc     (Journal of Applied Meteorology and Climatology)
+%   jtech     (Journal of Atmospheric and Oceanic Technology)
+%   jhm      (Journal of Hydrometeorology)
+%   jpo     (Journal of Physical Oceanography)
+%   jas      (Journal of Atmospheric Sciences)
+%   jcli      (Journal of Climate)
+%   mwr      (Monthly Weather Review)
+%   wcas      (Weather, Climate, and Society)
+%   waf       (Weather and Forecasting)
+%   bams (Bulletin of the American Meteorological Society)
+%   ei    (Earth Interactions)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%Citations should be of the form ``author year''  not ``author, year''
+\bibpunct{(}{)}{;}{a}{}{,}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% To be entered by author:
+
+%% May use \\ to break lines in title:
+
+\title{A test paper (pre-revision)}
+
+%%% Enter authors' names, as you see in this example:
+%%% Use \correspondingauthor{} and \thanks{Current Affiliation:...}
+%%% immediately following the appropriate author.
+%%%
+%%% Note that the \correspondingauthor{} command is NECESSARY.
+%%% The \thanks{} commands are OPTIONAL.
+
+    %\authors{Author One\correspondingauthor{Author One, 
+    % American Meteorological Society, 
+    % 45 Beacon St., Boston, MA 02108.}
+% and Author Two\thanks{Current affiliation: American Meteorological Society, 
+    % 45 Beacon St., Boston, MA 02108.}}
+
+\authors{Some Author\correspondingauthor{Some Place}}
+
+%% Follow this form:
+    % \affiliation{American Meteorological Society, 
+    % Boston, Massachusetts.}
+
+\affiliation{Some Affiliation}
+
+%% Follow this form:
+    %\email{latex@ametsoc.org}
+
+\email{someemail@somedomain.some}
+
+\extraauthor{Some Other Author}
+\extraaffil{Somewhere Else}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT
+%
+% Enter your abstract here
+% Abstracts should not exceed 250 words in length!
+%
+% For BAMS authors only: If your article requires a Capsule Summary, please place the capsule text at the end of your abstract
+% and identify it as the capsule. Example: This is the end of the abstract. (Capsule Summary) This is the capsule summary. 
+
+\abstract{This is an abstract from the old version of the article. It
+  is not a very good abstract.}
+
+\begin{document}
+
+%% Necessary!
+\maketitle
+
+%% ------------------------------------------------------------------------ %%
+%
+%  INTRODUCTION
+%
+%% ------------------------------------------------------------------------ %%
+
+\section{Introduction}\label{Introduction}
+
+Some text...
+
+A citation to a paper \citep{Gregg2003}.
+
+\section{Methods}
+
+Some more text...
+
+\section{Conclusion}
+
+Some other random text.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\acknowledgments
+
+Thank someone...
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% REFERENCES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Make your BibTeX bibliography by using these commands:
+\bibliographystyle{ametsoc2014}
+\bibliography{test}
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % TABLES
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIGURES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}
+%  \centering\includegraphics[width=16cm]{Figures/MOM025_shflux_kb3seg.png}
+  \caption{A test figure.}
+\label{}
+\end{figure}
+\end{document}
