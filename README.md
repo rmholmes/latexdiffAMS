@@ -1,4 +1,4 @@
-* latexdiff AMS tool
+# latexdiff AMS tool
 
 This script creates a pdf with the differences between two AMS latex
 .tex articles marked up. The main work is done by
@@ -20,7 +20,7 @@ command/environment.
 - This script will only work if there is nothing between the end of
   the abstract and the `\begin{document}` command.
 
-** Testing **
+**testing:**
 
-./latexdiffAMS test_old.tex test_new.tex test_diff.pdf
+`./latexdiffAMS test_old.tex test_new.tex test_diff.pdf`
 
