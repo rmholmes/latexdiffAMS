@@ -1,25 +1,26 @@
 #!/bin/bash
 # Script for applying latexdiff to AMS latex journal articles.
 #
-# usage: latexdiffAMS old.tex new.tex out.pdf
+# usage: ./latexdiffAMS old_article.tex new_article.tex diff.pdf
 #
 # This script streamlines the process of creating a marked-up .pdf of
 # the changes between an old (e.g. a previous submission) and a new
 # (e.g. after revisions have been completed) AMS journal .tex
 # file. Its main task is to automate the creation of a separate marked
-# up abstract (normal latexdiff will not mark-up the abstract because
-# it is in a environment).
+# up abstract, as the standard latexdiff will not mark-up the abstract
+# because it is within the latex header inside an \abstract
+# environment.
 #
-# dependencies; pdflatex, bibtex, latexdiff, pdftk
+# dependencies; pdflatex, bibtex, latexdiff, pdftk, sed
 
-# Make a temporary directory:
+# Make a temporary directory for working files
 WORKDIR=`mktemp -d -p ./`
 
-# raw latexdiff to create main file:
+# latexdiff to create diff.tex for majority of article
 echo "latexdiff $1 $2 > $WORKDIR/diff.tex"
 latexdiff $1 $2 > $WORKDIR/diff.tex 2>/dev/null
 
-# Create diff pdf:
+# Compile diff.tex
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
 pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 echo "bibtex $WORKDIR/diff"
@@ -29,12 +30,20 @@ pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
 pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 
-# Get abstracts:
+# Extract both old and new abstracts
+# This uses five sed steps:
+# 1. Extract everything between the strings "\abstract" and "\begin{document}"
+# 2. Remove the last line (has \begin{document})
+# 3. Remove any empty lines above this.
+# 4. Remove the "\abstract{" string from the beginning
+# 5. Remove the final "}" on the last line
+# Note: This will break if there is anything other than empty lines
+# between the last line of the abstract and the \begin{document}
 echo "Extracting Abstracts"
 oldABS=$(sed -n -e '/\\abstract/,/\\begin{document}/p' $1 | sed '$d' | sed '/^\s*$/d' | sed -e 's/\\abstract{//g' | sed 's/\(.*\)}$/\1 /')
 newABS=$(sed -n -e '/\\abstract/,/\\begin{document}/p' $2 | sed '$d' | sed '/^\s*$/d' | sed -e 's/\\abstract{//g' | sed 's/\(.*\)}$/\1 /')
 
-# Extract new abstract and put in file:
+# Create file header for abstract .tex files (obs_abs.tex and new_abs.tex)
 echo "\documentclass[12pt]{article}" >> $WORKDIR/old_abs.tex
 echo ""  >> $WORKDIR/old_abs.tex
 echo "\usepackage{lineno}" >> $WORKDIR/old_abs.tex
@@ -49,19 +58,24 @@ echo "ABSTRACT" >> $WORKDIR/old_abs.tex
 echo "\end{center}" >> $WORKDIR/old_abs.tex
 echo "" >> $WORKDIR/old_abs.tex
 
+# Copy file for new_abs.tex
 cp $WORKDIR/old_abs.tex $WORKDIR/new_abs.tex
 
+# Put old abstract into old_abs.tex
 echo $oldABS >> $WORKDIR/old_abs.tex
 echo "" >> $WORKDIR/old_abs.tex
 echo "\end{document}" >> $WORKDIR/old_abs.tex
 
+# Put new abstract into new_abs.tex
 echo $newABS >> $WORKDIR/new_abs.tex
 echo "" >> $WORKDIR/new_abs.tex
 echo "\end{document}" >> $WORKDIR/new_abs.tex
 
-# latexdiff abstract files:
+# latexdiff abstract files to produce diff_abs.tex
 echo "latexdiff $1 $2 > $WORKDIR/diff.tex"
 latexdiff $WORKDIR/old_abs.tex $WORKDIR/new_abs.tex > $WORKDIR/diff_abs.tex 2>/dev/null
+
+# Compile diff_abs.tex
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
 pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 echo "bibtex $WORKDIR/diff_abs"
@@ -71,7 +85,7 @@ pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
 pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 
-# Replace second page of diff.pdf with diff_abs.pdf usig pdftk:
+# Replace second page of diff.pdf with diff_abs.pdf usig pdftk
 echo "pdftk A=$WORKDIR/diff.pdf B=$WORKDIR/diff_abs.pdf cat A1 B1 A3-end output $3"
 pdftk A=$WORKDIR/diff.pdf B=$WORKDIR/diff_abs.pdf cat A1 B1 A3-end output $3
 
