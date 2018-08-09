@@ -31,12 +31,8 @@ pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 
 # Get abstracts:
 echo "Extracting Abstracts"
-oldABS=$(sed -n -e '/\\abstract/,/}/p' $1)
-newABS=$(sed -n -e '/\\abstract/,/}/p' $2)
-oldABS=$(echo $oldABS | sed -e 's/\\abstract{//g')
-oldABS=$(echo $oldABS | sed -e "s/}//g")
-newABS=$(echo $newABS | sed -e 's/\\abstract{//g')
-newABS=$(echo $newABS | sed -e "s/}//g")
+oldABS=$(sed -n -e '/\\abstract/,/\\begin{document}/p' $1 | sed '$d' | sed '/^\s*$/d' | sed -e 's/\\abstract{//g' | sed 's/\(.*\)}$/\1 /')
+newABS=$(sed -n -e '/\\abstract/,/\\begin{document}/p' $2 | sed '$d' | sed '/^\s*$/d' | sed -e 's/\\abstract{//g' | sed 's/\(.*\)}$/\1 /')
 
 # Extract new abstract and put in file:
 echo "\documentclass[12pt]{article}" >> $WORKDIR/old_abs.tex
