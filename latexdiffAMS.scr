@@ -17,27 +17,26 @@ WORKDIR=`mktemp -d -p ./`
 
 # raw latexdiff to create main file:
 echo "latexdiff $1 $2 > $WORKDIR/diff.tex"
-latexdiff $1 $2 > $WORKDIR/diff.tex
+latexdiff $1 $2 > $WORKDIR/diff.tex 2>/dev/null
 
 # Create diff pdf:
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
-pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
+pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 echo "bibtex $WORKDIR/diff"
-bibtex $WORKDIR/diff
+bibtex $WORKDIR/diff > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
-pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
+pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
-pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
+pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex > /dev/null
 
 # Get abstracts:
+echo "Extracting Abstracts"
 oldABS=$(sed -n -e '/\\abstract/,/}/p' $1)
 newABS=$(sed -n -e '/\\abstract/,/}/p' $2)
 oldABS=$(echo $oldABS | sed -e 's/\\abstract{//g')
 oldABS=$(echo $oldABS | sed -e "s/}//g")
 newABS=$(echo $newABS | sed -e 's/\\abstract{//g')
 newABS=$(echo $newABS | sed -e "s/}//g")
-echo $oldABS
-echo $newABS
 
 # Extract new abstract and put in file:
 echo "\documentclass[12pt]{article}" >> $WORKDIR/old_abs.tex
@@ -66,17 +65,18 @@ echo "\end{document}" >> $WORKDIR/new_abs.tex
 
 # latexdiff abstract files:
 echo "latexdiff $1 $2 > $WORKDIR/diff.tex"
-latexdiff $WORKDIR/old_abs.tex $WORKDIR/new_abs.tex > $WORKDIR/diff_abs.tex
+latexdiff $WORKDIR/old_abs.tex $WORKDIR/new_abs.tex > $WORKDIR/diff_abs.tex 2>/dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
-pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex
+pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 echo "bibtex $WORKDIR/diff_abs"
-bibtex $WORKDIR/diff_abs
+bibtex $WORKDIR/diff_abs > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
-pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex
+pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
-pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex
+pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 
 # put abstract_diff.pdf in diff.pdf using pdftk:
+cp $WORKDIR/diff_abs.pdf ./
 
 # copy to out.pdf:
 cp $WORKDIR/diff.pdf $3
