@@ -29,13 +29,54 @@ pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex"
 pdflatex -output-directory $WORKDIR $WORKDIR/diff.tex
 
-# Extract old abstract and put in file:
+# Get abstracts:
+oldABS=$(sed -n -e '/\\abstract/,/}/p' $1)
+newABS=$(sed -n -e '/\\abstract/,/}/p' $2)
+oldABS=$(echo $oldABS | sed -e 's/\\abstract{//g')
+oldABS=$(echo $oldABS | sed -e "s/}//g")
+newABS=$(echo $newABS | sed -e 's/\\abstract{//g')
+newABS=$(echo $newABS | sed -e "s/}//g")
+echo $oldABS
+echo $newABS
 
 # Extract new abstract and put in file:
+echo "\documentclass[12pt]{article}" >> $WORKDIR/old_abs.tex
+echo ""  >> $WORKDIR/old_abs.tex
+echo "\usepackage{lineno}" >> $WORKDIR/old_abs.tex
+echo "\linenumbers" >> $WORKDIR/old_abs.tex
+echo "\linespread{1.5}" >> $WORKDIR/old_abs.tex
+echo "\usepackage{fullpage}" >> $WORKDIR/old_abs.tex
+echo "" >> $WORKDIR/old_abs.tex
+echo "\begin{document}" >> $WORKDIR/old_abs.tex
+echo "" >> $WORKDIR/old_abs.tex
+echo "\begin{center}" >> $WORKDIR/old_abs.tex
+echo "ABSTRACT" >> $WORKDIR/old_abs.tex
+echo "\end{center}" >> $WORKDIR/old_abs.tex
+echo "" >> $WORKDIR/old_abs.tex
+
+cp $WORKDIR/old_abs.tex $WORKDIR/new_abs.tex
+
+echo $oldABS >> $WORKDIR/old_abs.tex
+echo "" >> $WORKDIR/old_abs.tex
+echo "\end{document}" >> $WORKDIR/old_abs.tex
+
+echo $newABS >> $WORKDIR/new_abs.tex
+echo "" >> $WORKDIR/new_abs.tex
+echo "\end{document}" >> $WORKDIR/new_abs.tex
 
 # latexdiff abstract files:
+echo "latexdiff $1 $2 > $WORKDIR/diff.tex"
+latexdiff $WORKDIR/old_abs.tex $WORKDIR/new_abs.tex > $WORKDIR/diff_abs.tex
+echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
+pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex
+echo "bibtex $WORKDIR/diff_abs"
+bibtex $WORKDIR/diff_abs
+echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
+pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex
+echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
+pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex
 
-# put abstract_diff.pdf in diff.pdf:
+# put abstract_diff.pdf in diff.pdf using pdftk:
 
 # copy to out.pdf:
 cp $WORKDIR/diff.pdf $3
