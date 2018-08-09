@@ -75,11 +75,9 @@ pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 echo "pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex"
 pdflatex -output-directory $WORKDIR $WORKDIR/diff_abs.tex > /dev/null
 
-# put abstract_diff.pdf in diff.pdf using pdftk:
-cp $WORKDIR/diff_abs.pdf ./
-
-# copy to out.pdf:
-cp $WORKDIR/diff.pdf $3
+# Replace second page of diff.pdf with diff_abs.pdf usig pdftk:
+echo "pdftk A=$WORKDIR/diff.pdf B=$WORKDIR/diff_abs.pdf cat A1 B1 A3-end output $3"
+pdftk A=$WORKDIR/diff.pdf B=$WORKDIR/diff_abs.pdf cat A1 B1 A3-end output $3
 
 # rm workdir:
 rm -r $WORKDIR
