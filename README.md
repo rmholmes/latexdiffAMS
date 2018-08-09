@@ -20,3 +20,7 @@ command/environment.
 - This script will only work if there is nothing between the end of
   the abstract and the `\begin{document}` command.
 
+** Testing **
+
+./latexdiffAMS test_old.tex test_new.tex test_diff.pdf
+
